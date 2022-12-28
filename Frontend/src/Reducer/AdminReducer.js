@@ -27,7 +27,25 @@ import {
   ADMIN_USER_REGISTER_SUCCESS,
   ADMIN_DOCUMENT_DRIVE_DELETE_REQUEST,
   ADMIN_DOCUMENT_DRIVE_DELETE_SUCCESS,
-  ADMIN_DOCUMENT_DRIVE_DELETE_ERR
+  ADMIN_DOCUMENT_DRIVE_DELETE_ERR,
+  ADMIN_FIND_REQUEST,
+  ADMIN_FIND_SUCCESS,
+  ADMIN_FIND_ERR,
+  SEARCH_FOR_MESSAGE_REQUEST,
+  SEARCH_FOR_MESSAGE_SUCCESS,
+  SEARCH_FOR_MESSAGE_ERR,
+  CHAT_START_CLICK_REQUEST,
+  CHAT_START_CLICK_SUCCESS,
+  CHAT_START_CLICK_ERR,
+  SUBMIT_NEW_MESSAGE_REQUEST,
+  SUBMIT_NEW_MESSAGE_SUCCESS,
+  SUBMIT_NEW_MESSAGE_ERR,
+  CHAT_SHOW_SECTION_REQUEST,
+  CHAT_SHOW_SECTION_SUCCESS,
+  CHAT_SHOW_SECTION_ERR,
+  USER_MSG_TOADMIN_REQUEST,
+  USER_MSG_TOADMIN_SUCCESS,
+  USER_MSG_TOADMIN_ERR,
 } from "../Constant/adminConstant";
 
 export const RegisterAdminReducer = (state = {}, action) => {
@@ -270,6 +288,157 @@ export const deleteDriveDocuReducer = (state = {}, action) => {
         dleteDriveDocument: action.payload,
       };
     case ADMIN_DOCUMENT_DRIVE_DELETE_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// AdminFindReducer
+export const AdminFindReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADMIN_FIND_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case ADMIN_FIND_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        findAdmin: action.payload,
+      };
+    case ADMIN_FIND_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// searchForMessageReducer
+export const searchForMessageReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SEARCH_FOR_MESSAGE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case SEARCH_FOR_MESSAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        findSearch: action.payload,
+      };
+    case SEARCH_FOR_MESSAGE_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// chatStarClickReducer
+export const chatStarClickReducer = (state = [], action) => {
+  switch (action.type) {
+    case CHAT_START_CLICK_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case CHAT_START_CLICK_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        findChat: action.payload,
+      };
+    case CHAT_START_CLICK_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// submitNewMessageReducer
+export const submitNewMessageReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SUBMIT_NEW_MESSAGE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case SUBMIT_NEW_MESSAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        submitMessage: action.payload,
+      };
+    case SUBMIT_NEW_MESSAGE_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// chatShowReducer
+
+export const chatShowReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CHAT_SHOW_SECTION_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case CHAT_SHOW_SECTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        chatShowSection: action.payload,
+      };
+    case CHAT_SHOW_SECTION_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// userMsgToAdminReducer
+export const userMsgToAdminReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_MSG_TOADMIN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_MSG_TOADMIN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userNewMsg: action.payload,
+      };
+    case USER_MSG_TOADMIN_ERR:
       return {
         ...state,
         loading: false,

@@ -27,6 +27,8 @@
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.3",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.5.4",
     "stripe": "^8.222.0",
     "uuid": "^9.0.0"
   },

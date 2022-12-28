@@ -25,7 +25,7 @@ export default function DataTable({ data, type, typeLink }) {
   useEffect(() => {
     if (type == "document") dispatch(documentFindAction());
     if (type == "video") dispatch(driveDocumentFindAction());
-  }, [data]);
+  }, [data, findDocument, findDriveDocument]);
 
   const columns = [
     { field: "id", headerName: "SNO", width: 160 },
@@ -130,12 +130,16 @@ export default function DataTable({ data, type, typeLink }) {
       <Box
         sx={{
           height: 400,
-          width: { xs: "auto", sm: "auto", md: "auto" },
+          // width: { xs: "100%", sm: "100%", md: "auto" },
           marginLeft: "auto",
           marginRight: "auto",
         }}
       >
         <DataGrid
+          sx={{
+            width: { xs: "100%", sm: "100%", md: "100%" },
+            overflowX: "scroll",
+          }}
           rows={rows && rows}
           columns={columns}
           pageSize={5}

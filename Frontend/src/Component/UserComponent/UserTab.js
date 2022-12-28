@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import HomeUser from "../../Screen/UserSide/HomeUser";
 import HomeUserForDocument from "../../Screen/UserSide/HomeUserForDocument";
 import HomeUserStripe from "../../Screen/UserSide/HomeUserStripe";
+import Chat from "../../Screen/Chat/Chat";
+import UserChatSection from "../../Screen/Chat/UserChat/UserChatSection";
 
 function TabPanel(props) {
   const navigate = useNavigate();
@@ -89,6 +91,7 @@ export const UserTabs = () => {
           <Tab label="Stripe" {...a11yProps(0)} />
           <Tab label="Video Links" {...a11yProps(1)} />
           <Tab label="Documents Link" {...a11yProps(2)} />
+          <Tab label="Chat" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -97,13 +100,16 @@ export const UserTabs = () => {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <HomeUserStripe/>
+          <HomeUserStripe />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <HomeUser />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <HomeUserForDocument />
+        </TabPanel>
+        <TabPanel value={value} index={3} dir={theme.direction}>
+          <UserChatSection />
         </TabPanel>
       </SwipeableViews>
     </Box>

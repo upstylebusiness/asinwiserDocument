@@ -17,8 +17,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { Link, useNavigate } from "react-router-dom";
+import { Tooltip } from "@material-ui/core";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
 const drawerWidth = 240;
 
@@ -109,6 +110,24 @@ export default function SideBar({ children }) {
           <Typography variant="h6" noWrap component="div">
             Asinwiser Documentary
           </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Chat Section">
+              <Link
+                to="/chat"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="start"
+                  sx={{ p: 0, mr: 2 }}
+                >
+                  <ChatBubbleIcon />
+                </IconButton>
+              </Link>
+            </Tooltip>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer

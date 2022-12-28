@@ -15,6 +15,7 @@ import { User } from "../model/userRegisterModel.js";
 import generatorToken from "../util/jwtTokenGenerate.js";
 import { uploadImages } from "./aws/s3Manage.js";
 import { driveDocument } from "../model/driveDocument.js";
+import { Chat } from "../model/chatSectionModel.js";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ID,
@@ -38,7 +39,7 @@ export const registerAdmin = asyncHandler(async (req, res) => {
     res.json({
       isUserExist: {
         _id: isUserExist._id,
-        firstName: isUserExist.firstName,
+        name: isUserExist.firstName ? isUserExist.firstName : isUserExist.name,
         isSuperAdmin: isUserExist.isSuperAdmin,
         isAdmin: isUserExist.isAdmin,
       },
@@ -57,7 +58,7 @@ export const LoginAdmin = asyncHandler(async (req, res) => {
     res.json({
       isUserExist: {
         _id: isUserExist._id,
-        firstName: isUserExist.firstName,
+        name: isUserExist.firstName ? isUserExist.firstName : isUserExist.name,
         isSuperAdmin: isUserExist.isSuperAdmin,
         isAdmin: isUserExist.isAdmin,
       },
@@ -69,7 +70,9 @@ export const LoginAdmin = asyncHandler(async (req, res) => {
       res.json({
         isUserExist: {
           _id: isUserExist._id,
-          firstName: isUserExist.firstName,
+          name: isUserExist.firstName
+            ? isUserExist.firstName
+            : isUserExist.name,
           isSuperAdmin: isUserExist.isSuperAdmin,
           isAdmin: isUserExist.isAdmin,
         },
@@ -116,7 +119,6 @@ export const userFind = asyncHandler(async (req, res) => {
 export const documentUpload = asyncHandler(async (req, res) => {
   const { Dname, Dlink } = req.body.details;
   const { userID, selectUser } = req.body;
-  console.log(selectUser, "lable='select user'lable='select user'");
   let Check = await documentVideo.findOne({
     documentVLname: Dname,
     videoLink: Dlink,
@@ -140,7 +142,6 @@ export const documentUpload = asyncHandler(async (req, res) => {
 export const driveDocumentUpload = asyncHandler(async (req, res) => {
   const { dDname, dDlink } = req.body.details;
   const { userID, selectUser } = req.body;
-  console.log(selectUser, "skdjfhskjdh");
   let Check = await driveDocument.findOne({
     driveDocumentName: dDname,
     driveDocumentLink: dDlink,
@@ -282,4 +283,130 @@ export const deleteDriveDocu = asyncHandler(async (req, res) => {
     _id: id,
   });
   res.json(deleteDocument);
+});
+
+// AdminFind
+export const AdminFind = asyncHandler(async (req, res) => {
+  const { id } = req.query;
+
+  let findAdmin = await Admin.findOne({
+    _id: id,
+  });
+  res.json(findAdmin);
+});
+
+// searchForMessage
+export const searchForMessage = asyncHandler(async (req, res) => {
+  const { value, userID } = req.body;
+  let findUsers;
+  if (value) {
+    findUsers = await User.find({
+      name: { $regex: value },
+      myAdmin: { $regex: userID },
+    });
+  }
+  res.json(findUsers);
+});
+
+// chatStarClickt
+export const chatStarClick = asyncHandler(async (req, res) => {
+  const { id, userID } = req.body;
+
+  let findChat = await Chat.find({ adminId: userID, userId: id });
+
+  if (findChat && findChat.length !== 0) {
+    res.json(findChat);
+  } else {
+    var currentTime = new Date();
+
+    var currentOffset = currentTime.getTimezoneOffset();
+
+    var ISTOffset = 330; // IST offset UTC +5:30
+
+    var ISTTime = new Date(
+      currentTime.getTime() + (ISTOffset + currentOffset) * 60000
+    );
+
+    // ISTTime now represents the time in IST coordinates
+
+    var hoursIST = ISTTime.getHours();
+    var minutesIST = ISTTime.getMinutes();
+
+    let creatChat = await Chat.create({
+      adminId: userID,
+      userId: id,
+      message: [],
+      time: `${hoursIST + ":" + minutesIST}`,
+    });
+
+    let createFind = await Chat.find({
+      adminId: creatChat.adminId,
+      userId: creatChat.userId,
+    });
+    console.log(createFind, "createFindcreateFindcreateFind");
+    res.json(createFind);
+  }
+});
+
+// submitNewMessage
+export const submitNewMessage = asyncHandler(async (req, res) => {
+  const { textChat, userId } = req.body;
+  var currentTime = new Date();
+
+  var currentOffset = currentTime.getTimezoneOffset();
+
+  var ISTOffset = 330; // IST offset UTC +5:30
+
+  var ISTTime = new Date(
+    currentTime.getTime() + (ISTOffset + currentOffset) * 60000
+  );
+
+  // ISTTime now represents the time in IST coordinates
+
+  var hoursIST = ISTTime.getHours();
+  var minutesIST = ISTTime.getMinutes();
+  let updateChat = await Chat.updateOne(
+    {
+      userId: userId,
+    },
+    {
+      $push: {
+        message: {
+          textChat,
+          time: hoursIST + ":" + minutesIST,
+          messageOwner: "admin",
+        },
+      },
+    }
+  );
+  updateChat.userId = userId;
+  res.json(updateChat);
+});
+
+// chatShow
+export const chatShow = asyncHandler(async (req, res) => {
+  const { id } = req.query;
+  let findChatUser = await User.find({
+    // _id: id,
+    myAdmin: id,
+  });
+  // let findChatShow = await Chat.find({
+  //   adminId: id,
+  // });
+
+  // var newFindChatShow = findChatShow.filter((data) => {
+  //   return data.message.length !== 0;
+  // });
+
+  // let findChatUser = await newFindChatShow.map(async (value) => {
+  res.json(findChatUser);
+  // });
+});
+
+// userMsgToAdmin
+export const userMsgToAdmin = asyncHandler(async (req, res) => {
+  const { id } = req.query;
+  let newMsg = await Chat.find({ _id: id });
+
+  res.json(newMsg);
 });

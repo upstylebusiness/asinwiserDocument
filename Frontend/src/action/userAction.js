@@ -1,54 +1,133 @@
 import axios from "axios";
-import { USER_DOCUMENT_LINK_FIND_ERR, USER_DOCUMENT_LINK_FIND_REQUEST, USER_DOCUMENT_LINK_FIND_SUCCESS, USER_VIDEO_LINK_FIND_ERR, USER_VIDEO_LINK_FIND_REQUEST, USER_VIDEO_LINK_FIND_SUCCESS } from "../Constant/userConstant";
+import {
+  USER_CHAT_FIND_ERR,
+  USER_CHAT_FIND_REQUEST,
+  USER_CHAT_FIND_SUCCESS,
+  USER_CHAT_SUBMIT_ERR,
+  USER_CHAT_SUBMIT_REQUEST,
+  USER_CHAT_SUBMIT_SUCCESS,
+  USER_DOCUMENT_LINK_FIND_ERR,
+  USER_DOCUMENT_LINK_FIND_REQUEST,
+  USER_DOCUMENT_LINK_FIND_SUCCESS,
+  USER_VIDEO_LINK_FIND_ERR,
+  USER_VIDEO_LINK_FIND_REQUEST,
+  USER_VIDEO_LINK_FIND_SUCCESS,
+} from "../Constant/userConstant";
+import { URL_API } from "../baseUrl/url";
 
 // findUserVideoLinkAction
 export const findUserVideoLinkAction = () => async (dispatch, getState) => {
-    try {
-      dispatch({ type: USER_VIDEO_LINK_FIND_REQUEST });
-      // headers: {
-      //   Authorization: `Bearer ${thunkApi.extra.jwt}`
-      // }
+  try {
+    dispatch({ type: USER_VIDEO_LINK_FIND_REQUEST });
+    // headers: {
+    //   Authorization: `Bearer ${thunkApi.extra.jwt}`
+    // }
 
-      let adminExit = localStorage.getItem("loginInfo")
+    let adminExit = localStorage.getItem("loginInfo")
       ? JSON.parse(localStorage.getItem("loginInfo"))
       : null;
 
-      let userID = adminExit.isUserExist._id;
+    let userID = adminExit.isUserExist._id;
 
-      let { data } = await axios.get(`/api/user/findLinkvideo/?id=${userID}`);
-  
-      dispatch({ type: USER_VIDEO_LINK_FIND_SUCCESS, payload: data });
-  
-    } catch (error) {
-      dispatch({
-        type: USER_VIDEO_LINK_FIND_ERR,
-        payload: error.response.data.message,
-      });
-    }
-  };
+    let { data } = await axios.get(
+      `${URL_API}/api/user/findLinkvideo/?id=${userID}`
+    );
 
-  // findUserDocumentLinkAction
-  export const findUserDocumentLinkAction = () => async (dispatch, getState) => {
-    try {
-      dispatch({ type: USER_DOCUMENT_LINK_FIND_REQUEST });
-      // headers: {
-      //   Authorization: `Bearer ${thunkApi.extra.jwt}`
-      // }
+    dispatch({ type: USER_VIDEO_LINK_FIND_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_VIDEO_LINK_FIND_ERR,
+      payload: error.response.data.message,
+    });
+  }
+};
 
-      let adminExit = localStorage.getItem("loginInfo")
+// findUserDocumentLinkAction
+export const findUserDocumentLinkAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DOCUMENT_LINK_FIND_REQUEST });
+    // headers: {
+    //   Authorization: `Bearer ${thunkApi.extra.jwt}`
+    // }
+
+    let adminExit = localStorage.getItem("loginInfo")
       ? JSON.parse(localStorage.getItem("loginInfo"))
       : null;
 
-      let userID = adminExit.isUserExist._id;
+    let userID = adminExit.isUserExist._id;
 
-      let { data } = await axios.get(`/api/user/findLinkDocument/?id=${userID}`);
+    let { data } = await axios.get(
+      `${URL_API}/api/user/findLinkDocument/?id=${userID}`
+    );
+
+    dispatch({ type: USER_DOCUMENT_LINK_FIND_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_DOCUMENT_LINK_FIND_ERR,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// userChatFindAction
+export const userChatFindAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_CHAT_FIND_REQUEST });
+    // headers: {
+    //   Authorization: `Bearer ${thunkApi.extra.jwt}`
+    // }
+
+    let adminExit = localStorage.getItem("loginInfo")
+      ? JSON.parse(localStorage.getItem("loginInfo"))
+      : null;
+
+    let userID = adminExit.isUserExist._id;
+
+    let { data } = await axios.get(
+      `${URL_API}/api/user/userChatFind/?id=${userID}`
+    );
+
+    dispatch({ type: USER_CHAT_FIND_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_CHAT_FIND_ERR,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// userChatSubmitAction
+export const userChatSubmitAction = (value) => async (dispatch, getState) => {
   
-      dispatch({ type: USER_DOCUMENT_LINK_FIND_SUCCESS, payload: data });
-  
-    } catch (error) {
-      dispatch({
-        type: USER_DOCUMENT_LINK_FIND_ERR,
-        payload: error.response.data.message,
-      });
-    }
-  };
+  try {
+    dispatch({ type: USER_CHAT_SUBMIT_REQUEST });
+    // headers: {
+    //   Authorization: `Bearer ${thunkApi.extra.jwt}`
+    // }
+
+    let adminExit = localStorage.getItem("loginInfo")
+      ? JSON.parse(localStorage.getItem("loginInfo"))
+      : null;
+
+    let userID = adminExit.isUserExist._id;
+
+    let { data } = await axios.post(
+      `${URL_API}/api/user/userChatSubmit`,
+      { value, userID },
+      {
+        headers: {
+          authorization: adminExit.Token,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    dispatch({ type: USER_CHAT_SUBMIT_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_CHAT_SUBMIT_ERR,
+      payload: error.response.data.message,
+    });
+  }
+};

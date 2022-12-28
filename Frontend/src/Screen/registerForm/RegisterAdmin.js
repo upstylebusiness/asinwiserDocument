@@ -71,7 +71,7 @@ function RegisterAdmin() {
       if (adminExit.isUserExist.isAdmin) {
         navigate("/");
       }else{
-        navigate("/home");
+        navigate("/userHome");
       }
     }else{
       navigate("/register");

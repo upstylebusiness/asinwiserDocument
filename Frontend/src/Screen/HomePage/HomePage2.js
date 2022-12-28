@@ -73,7 +73,6 @@ function HomePage2() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(selectUser, "sdselectUser");
     dispatch(driveDocumentUploadAction(formValues, selectUser));
   };
 
@@ -254,13 +253,14 @@ function HomePage2() {
           </table>
         </form>
       </Box>
-      <DataTable data={dataTable} link={"document"} typeLink={"document"} />
-      {/* <Box
+      {/* <DataTable data={dataTable} link={"document"} typeLink={"document"} /> */}
+      <Box
         sx={{
-          height: 400,
+          // height: 400,
           width: { xs: "auto", sm: "auto", md: "auto" },
           marginLeft: "auto",
           marginRight: "auto",
+          overflowX:"scroll"
         }}
       >
         <Table
@@ -269,11 +269,11 @@ function HomePage2() {
           dataSource={data}
           antTableProps={{
             showHeader: true,
-            pagination: false,
+            pagination: true,
           }}
           mobileBreakPoint={768}
         />
-      </Box> */}
+      </Box>
     </div>
   );
 }

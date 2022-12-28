@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Asinwiser Doc",
+  "name": "Asinwiser Document",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,16 +9,16 @@
     },
     {
       "src": "logo192.png",
-      "type": "image/png",
+      "type": "image/jpg",
       "sizes": "192x192"
     },
     {
       "src": "logo512.png",
-      "type": "image/png",
+      "type": "image/jpg",
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "https://asinwiserdocument.s3.eu-west-2.amazonaws.com",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

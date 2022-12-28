@@ -1,8 +1,26 @@
 import express from "express";
-import { checkout, deleteDriveDocu, documentFileAdd, documentFind, documentUpload, documentVidDel, driveDocumentFind, driveDocumentUpload, LoginAdmin, registerAdmin, userFind, userRegister } from "../controller/adminController.js";
+import {
+  AdminFind,
+  chatShow,
+  chatStarClick,
+  checkout,
+  deleteDriveDocu,
+  documentFileAdd,
+  documentFind,
+  documentUpload,
+  documentVidDel,
+  driveDocumentFind,
+  driveDocumentUpload,
+  LoginAdmin,
+  registerAdmin,
+  searchForMessage,
+  submitNewMessage,
+  userFind,
+  userMsgToAdmin,
+  userRegister,
+} from "../controller/adminController.js";
 
 const router = express.Router();
-
 
 //register Admin
 router.route("/register").post(registerAdmin);
@@ -11,7 +29,7 @@ router.route("/register").post(registerAdmin);
 router.route("/login").post(LoginAdmin);
 
 // userRegister
-router.route("/userRegister").post(userRegister)
+router.route("/userRegister").post(userRegister);
 
 //userFind
 router.route("/userFind").get(userFind);
@@ -38,5 +56,23 @@ router.route("/driveDocumentFind").get(driveDocumentFind);
 
 // deleteDriveDocu
 router.route("/deleteDriveDocu").delete(deleteDriveDocu);
+
+// AdminFind
+router.route("/AdminFind").get(AdminFind);
+
+// searchForMessage
+router.route("/searchForMessage").post(searchForMessage);
+
+// chatStarClickt
+router.route("/chatStarClick").post(chatStarClick);
+
+// submitNewMessage
+router.route("/submitNewMessage").post(submitNewMessage);
+
+// chatShow
+router.route("/chatShow").get(chatShow);
+
+// userMsgToAdmin
+router.route("/userMsgToAdmin").get(userMsgToAdmin);
 
 export default router;

@@ -23,7 +23,7 @@ React.useEffect(() => {
     if (adminExit.isUserExist.isAdmin) {
       navigate("/");
     } else {
-      navigate("/home");
+      navigate("/userHome");
     }
   } else {
     navigate("/login");

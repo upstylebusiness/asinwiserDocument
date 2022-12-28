@@ -13,14 +13,14 @@ import {
   TextareaAutosize,
   TextField,
   Typography,
-  Paper
+  Paper,
 } from "@material-ui/core";
 import Swal from "sweetalert2";
 
-import { Space, Table, Tag,Dropdown,Menu } from "antd";
+import { Space, Table, Tag, Dropdown, Menu } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
-import { userFindAction, userRegisterAction } from "../action/adminAction";
+import { userFindAction, userRegisterAction, userStatusChangeAction } from "../action/adminAction";
 
 function UserManagment() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ function UserManagment() {
     setStatus(event.target.value);
     // dispatch(userStatusChageAction(event.target.value, id));
   };
- 
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -112,11 +112,23 @@ function UserManagment() {
             {user.status.toUpperCase()}
           </Tag>
         ),
-         action:(
-   <Menu>
-  <Menu.Item>Active</Menu.Item>
-  <Menu.Item>Block</Menu.Item>
-</Menu>
+        action: (
+          <Menu>
+            <Menu.Item
+              onClick={(e) => {
+                dispatch(userStatusChangeAction(user._id, "active"));
+              }}
+            >
+              Active
+            </Menu.Item>
+            <Menu.Item
+              onClick={(e) => {
+                dispatch(userStatusChangeAction(user._id, "block"));
+              }}
+            >
+              Block
+            </Menu.Item>
+          </Menu>
         ),
       };
     });
@@ -134,7 +146,6 @@ function UserManagment() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // alert(formValues.password)
     dispatch(userRegisterAction(formValues, phone));
   };
 
@@ -239,23 +250,26 @@ function UserManagment() {
         </Button>
       </Box>
       <Grid
-              container
-              alignItems="center"
-              justify="center"
-              direction="column"
-              style={{width:"100%"}}
-            >
-        <Grid item style={{width:"100%"}}>
-            <Paper className="container">    
-            
-      <Table style={{marginTop:"10px"}} columns={columns} dataSource={data}   antTableProps={{
-        showHeader: true,
-        pagination: false
-      }}
-      mobileBreakPoint={768}/>
-
-      </Paper>
-      </Grid>
+        container
+        alignItems="center"
+        justify="center"
+        direction="column"
+        style={{ width: "100%" }}
+      >
+        <Grid item style={{ width: "100%" }}>
+          <Paper className="container">
+            <Table
+              style={{ marginTop: "10px" }}
+              columns={columns}
+              dataSource={data}
+              antTableProps={{
+                showHeader: true,
+                pagination: false,
+              }}
+              mobileBreakPoint={768}
+            />
+          </Paper>
+        </Grid>
       </Grid>
     </>
   );

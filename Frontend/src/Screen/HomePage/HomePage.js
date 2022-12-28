@@ -61,7 +61,6 @@ function HomePage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    alert(name, value, "skdjfbhskdjbfk");
     setFormValues({
       ...formValues,
       [name]: value,

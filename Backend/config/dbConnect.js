@@ -20,7 +20,7 @@ const connectDb = async () => {
         console.error(err);
       });
 
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect('mongodb://upscale:d5xsXjYUem&S9rB@13.40.105.133:52531/admin');
   } catch (error) {
     console.log("Mongo is error :", error);
   }
