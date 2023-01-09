@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  adminSearchSocket,
   findLinkDocument,
   findLinkvideo,
   userChatFind,
@@ -18,5 +19,9 @@ router.route("/userChatFind").get(userChatFind);
 
 // userChatSubmit
 router.route("/userChatSubmit").post(userChatSubmit);
+
+// adminSearchSocket
+router.route("/adminSearchSocket").get(adminSearchSocket);
+
 
 export default router;

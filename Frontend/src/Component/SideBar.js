@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -19,7 +19,12 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { Link, useNavigate } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
+import useSocket from "../costumHook/useSocket.io";
+import { AdminFindAction } from "../action/adminAction";
+import { useDispatch, useSelector } from "react-redux";
+// import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
 const drawerWidth = 240;
 
@@ -71,7 +76,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function SideBar({ children }) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [notification, setNotification] = useState([]);
+
+  const { findAdmin } = useSelector((state) => {
+    return state.AdminFind;
+  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -88,6 +99,26 @@ export default function SideBar({ children }) {
       : localStorage.removeItem("loginInfo");
     navigate("/login");
   };
+
+  const socket = useSocket((socket) => {
+    socket.on("getNotification", (data) => {
+      setNotification((prev) => [...prev, data]);
+    });
+
+    socket.on("connect_error", (data) => {
+      console.log(data, "errrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+    });
+  });
+
+  console.log(notification, "prevprevprevprevprev");
+
+  useEffect(() => {
+    dispatch(AdminFindAction());
+  }, [notification]);
+
+  useEffect(() => {
+    socket?.emit("newUser", findAdmin?.firstName);
+  }, [socket, findAdmin]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -123,7 +154,20 @@ export default function SideBar({ children }) {
                   edge="start"
                   sx={{ p: 0, mr: 2 }}
                 >
-                  <ChatBubbleIcon />
+                  {/* <ChatBubbleIcon /> */}
+                  {notification !== 0 ? (
+                    <Badge
+                      color="success"
+                      badgeContent={notification?.length}
+                      onClick={() => {
+                        setNotification([]);
+                      }}
+                    >
+                      <MailIcon color="action" />
+                    </Badge>
+                  ) : (
+                    <MailIcon color="action" />
+                  )}
                 </IconButton>
               </Link>
             </Tooltip>

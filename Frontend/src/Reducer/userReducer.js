@@ -1,4 +1,7 @@
 import {
+  ADMIN_SEARCH_SOCKET_ERR,
+  ADMIN_SEARCH_SOCKET_REQUEST,
+  ADMIN_SEARCH_SOCKET_SUCCESS,
   USER_CHAT_FIND_ERR,
   USER_CHAT_FIND_REQUEST,
   USER_CHAT_FIND_SUCCESS,
@@ -102,6 +105,31 @@ export const userChatSubmitReducer = (state = {}, action) => {
         userChatSubmit: action.payload,
       };
     case USER_CHAT_SUBMIT_ERR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// adminSearchSocketReducer
+export const adminSearchSocketReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADMIN_SEARCH_SOCKET_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case ADMIN_SEARCH_SOCKET_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        adminFindSocket: action.payload,
+      };
+    case ADMIN_SEARCH_SOCKET_ERR:
       return {
         ...state,
         loading: false,

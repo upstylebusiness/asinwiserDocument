@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  ADMIN_SEARCH_SOCKET_ERR,
+  ADMIN_SEARCH_SOCKET_REQUEST,
+  ADMIN_SEARCH_SOCKET_SUCCESS,
   USER_CHAT_FIND_ERR,
   USER_CHAT_FIND_REQUEST,
   USER_CHAT_FIND_SUCCESS,
@@ -98,7 +101,6 @@ export const userChatFindAction = () => async (dispatch, getState) => {
 
 // userChatSubmitAction
 export const userChatSubmitAction = (value) => async (dispatch, getState) => {
-  
   try {
     dispatch({ type: USER_CHAT_SUBMIT_REQUEST });
     // headers: {
@@ -127,6 +129,40 @@ export const userChatSubmitAction = (value) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_CHAT_SUBMIT_ERR,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// adminSearchSocketAction
+export const adminSearchSocketAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ADMIN_SEARCH_SOCKET_REQUEST });
+    // headers: {
+    //   Authorization: `Bearer ${thunkApi.extra.jwt}`
+    // }
+
+    let adminExit = localStorage.getItem("loginInfo")
+      ? JSON.parse(localStorage.getItem("loginInfo"))
+      : null;
+
+    let userID = adminExit.isUserExist._id;
+
+    let { data } = await axios.get(
+      `${URL_API}/api/user/adminSearchSocket/?id=${userID}`,
+      {
+        headers: {
+          authorization: adminExit.Token,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    dispatch({ type: ADMIN_SEARCH_SOCKET_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_SEARCH_SOCKET_ERR,
       payload: error.response.data.message,
     });
   }

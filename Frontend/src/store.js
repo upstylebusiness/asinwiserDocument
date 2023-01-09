@@ -19,6 +19,7 @@ import {
   userRegisterReducer,
 } from "./Reducer/AdminReducer";
 import {
+  adminSearchSocketReducer,
   findUserDocumentLinkReducer,
   findUserVideoLinkReducer,
   userChatFindReducer,
@@ -49,6 +50,7 @@ const appReducer = combineReducers({
   findUserDocumentLink: findUserDocumentLinkReducer,
   userChatFind: userChatFindReducer,
   userChatSubmit: userChatSubmitReducer,
+  adminSearchSocket :adminSearchSocketReducer
 });
 
 let Middleware = [thunk];

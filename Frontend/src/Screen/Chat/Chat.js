@@ -37,6 +37,8 @@ import {
   userMsgToAdminAction,
 } from "../../action/adminAction";
 import useSocket from "../../costumHook/useSocket.io";
+import { URL_API } from "../../baseUrl/url";
+import { Badge } from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
@@ -62,11 +64,17 @@ const Chat = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  // const socket = io(URL_API, {
+  //   transports: ["websocket"],
+  // });
+
   const [chatValue, setChatValue] = useState([]);
   const [chatMessage, setChatMessage] = useState([]);
+  const [notification, setNotification] = useState([]);
   const [textChat, setTextChat] = useState("");
-  const [userName, setUserName] = useState({ name: "", image: "" });
+  const [userName, setUserName] = useState({ id: "", name: "", image: "" });
   const [isDisplay, setIsDisplay] = useState("none");
+  const [seen, setSeen] = useState([{ id: "", noti: "" }]);
 
   const { findAdmin } = useSelector((state) => {
     return state.AdminFind;
@@ -91,13 +99,9 @@ const Chat = () => {
   const { userNewMsg } = useSelector((state) => {
     return state.userMsgToAdmin;
   });
-  // console.log(chatMessage,"*********************************************/**/*/*/");
+
   useEffect(() => {
     if (findChat && findChat !== undefined && findChat !== null) {
-      console.log(
-        findChat,
-        "*********************************************/**/*/*/"
-      );
       setChatMessage(findChat);
     }
   }, [findChat]);
@@ -136,20 +140,60 @@ const Chat = () => {
   }, [submitMessage]);
 
   // submitMessageClick
-  const submitMessageClick = (userId) => {
+  const submitMessageClick = (e, userId) => {
+    e.preventDefault();
     dispatch(submitNewMessageAction(userId, textChat));
+
+    socket.emit("sendText", {
+      senderName: findAdmin?.firstName,
+      id: userName && userName.id,
+      textChat,
+    });
+
+    socket.on("connect_error", (data) => {
+      console.log(data, "errrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+    });
+
     setTextChat("");
   };
 
   // socket-io
+  // const socket = useSocket((socket) => {
+  //   socket.on("chat", (data) => {
+  //     dispatch(userMsgToAdminAction(data._id));
+  //   });
+
+  //   socket.on("connect_error", (data) => {
+  //     console.log(data, "errrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+  //   });
+  // });
+
   const socket = useSocket((socket) => {
-    socket.on("chat", (data) => {
-      dispatch(userMsgToAdminAction(data._id));
+    socket.on("getNotification", (data) => {
+      setNotification((prev) => [...prev, data]);
+      console.log(data, "-*************");
+
+      setSeen((prev) => [
+        ...prev,
+
+        {
+          id: data.id,
+          noti: true,
+        },
+      ]);
     });
+
     socket.on("connect_error", (data) => {
       console.log(data, "errrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     });
   });
+
+  console.log(seen, "data._iddata._iddata._id");
+
+  useEffect(() => {
+    socket?.emit("newUser", findAdmin?.firstName);
+  }, [socket, findAdmin]);
+
   return (
     <div>
       <Grid container>
@@ -218,9 +262,17 @@ const Chat = () => {
                   key={data._id}
                   onClick={() => {
                     setChatMessage([]);
-                    setUserName({ name: data.name, image: data.image });
+                    setUserName({
+                      id: data._id,
+                      name: data.name,
+                      image: data.image,
+                    });
                     setIsDisplay("block");
                     dispatch(chatStarClickAction(data._id));
+                    setSeen(seen.filter((item) => item.id !== data._id));
+                    setNotification(
+                      notification.filter((item) => item.id !== data._id)
+                    );
                   }}
                 >
                   <ListItemIcon>
@@ -230,7 +282,24 @@ const Chat = () => {
                     />
                   </ListItemIcon>
                   <ListItemText primary={data.name}>{data.name}</ListItemText>
-                  <ListItemText secondary="online" align="right"></ListItemText>
+                  {notification.length !== 0 &&
+                    notification?.map(
+                      (data1) =>
+                        data1.id === data._id && (
+                          // <ListItemText
+                          //   secondary="online"
+                          //   align="right"
+                          // ></ListItemText>
+
+                          <Badge
+                            color="success"
+                            badgeContent={
+                              seen &&
+                              seen.filter((x) => x.id === data1.id).length
+                            }
+                          ></Badge>
+                        )
+                    )}
                 </ListItem>
               );
             })}
@@ -421,15 +490,17 @@ const Chat = () => {
                       fullWidth
                     />
                   </Grid>
-                  <Grid xs={1} align="right">
-                    {textChat && (
-                      <Fab color="primary" aria-label="add">
-                        <SendIcon
-                          onClick={() => submitMessageClick(data.userId)}
-                        />
-                      </Fab>
-                    )}
-                  </Grid>
+                  <form onSubmit={(e) => submitMessageClick(e, data.userId)}>
+                    <Grid xs={1} align="right">
+                      {textChat && (
+                        <Fab color="primary" aria-label="add">
+                          <Button type="submit">
+                            <SendIcon />
+                          </Button>
+                        </Fab>
+                      )}
+                    </Grid>
+                  </form>
                 </Grid>
               );
             })

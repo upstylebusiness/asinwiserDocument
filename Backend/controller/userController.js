@@ -3,6 +3,7 @@ import { documentVideo } from "../model/DocumentVideoLinkModel.js";
 import { driveDocument } from "../model/driveDocument.js";
 import { Chat } from "../model/chatSectionModel.js";
 import { User } from "../model/userRegisterModel.js";
+import { Admin } from "../model/adminRegisterModel.js";
 
 export const findLinkvideo = asyncHandler(async (req, res) => {
   const { id } = req.query;
@@ -80,8 +81,19 @@ export const userChatSubmit = asyncHandler(async (req, res) => {
       ],
       time: `${hoursIST + ":" + minutesIST}`,
     });
-    console.log(creatUserChat, "value, userIDvalue, userIDvalue, userID");
 
     res.json(creatUserChat);
   }
+});
+
+// adminSearchSocket
+
+export const adminSearchSocket = asyncHandler(async (req, res) => {
+  const { id } = req.query;
+
+  const userFind = await User.findById({ _id: id });
+
+  const AdminFind = await Admin.findById({ _id: userFind?.myAdmin });
+
+  res.json(AdminFind);
 });

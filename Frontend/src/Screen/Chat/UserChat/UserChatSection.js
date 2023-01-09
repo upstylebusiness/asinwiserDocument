@@ -81,10 +81,9 @@ export default function UserChatSection() {
 
   //   return () => {
   //     // window.addEventListener("online", handleOnline);
-  //      
+  //
   //   };
   // }, []);
-
 
   // browser store
   let adminExit = localStorage.getItem("loginInfo")
@@ -102,6 +101,10 @@ export default function UserChatSection() {
       console.log(data, "errrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     });
   });
+
+  useEffect(() => {
+    socket?.emit("newUser", Name && Name);
+  }, [socket, Name]);
 
   return (
     <>
